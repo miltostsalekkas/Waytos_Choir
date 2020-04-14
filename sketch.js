@@ -14,6 +14,19 @@ var fontPixel;
 var fontReady;
 
 var Tile;
+var Background;
+var Characters;
+var RightBar;
+var MicTile;
+
+var CharNo;
+var Users;
+
+var img = [];
+var ImagesRead = false;
+
+var RandomNumbers = [];
+var NoteColors = ['#F393B5', '#2DB467', '#F05A24', '#5555AA', '#EE3D3D', '#AB88BE', '#E9E85E', '#CE7F3E'];
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
@@ -25,6 +38,8 @@ function preload() {
 }
 
 function setup() {
+
+
 
     createCanvas(windowWidth, windowHeight);
     bgcolor = color(255);
@@ -51,33 +66,85 @@ function setup() {
 
         }
     );
+    socket.on('CharNo',
+        // When we receive data
+        function (data) {
+            CharNo = data;
 
-    user = new Window(windowWidth / 2, windowHeight / 2, 390, 220, 200, false, true);
-    userInput = new Window(windowWidth / 2, windowHeight / 2, 250, 50, 250, true);
+        }
+    );
+    socket.on('Users',
+        // When we receive data
+        function (data) {
+            Users = data;
+        }
+    );
 
 
+    user = new Window(5, windowWidth / 2, windowHeight / 2, 390, 220, 200, false, true);
+    userInput = new Window(5, windowWidth / 2, windowHeight / 2, 250, 50, 250, true);
+
+
+    for (var i = 0; i < 15; i++) {
+        RandomNumbers.push(Math.floor(random(1, 8)));
+    }
 }
 
 function keyTyped(bla) {
     return bla;
 }
+
+function ReadImages() {
+    if (CharNo != null) {
+        for (var i = 0; i < CharNo; i++) {
+
+            img[i] = loadImage('./assets/Characters/300ppi/' + (i + 1) + '.png');
+
+        }
+        ImagesRead = true;
+    }
+}
 function draw() {
 
+    if (!ImagesRead) {
+        ReadImages();
+    }
 
-    background(246, 246, 246);
-    console.log(keyTyped());
 
-
-    var margin = 0.8;
-    var RightMargin = 250;
-    TileSize = 250;
-    var FrameMargin = 20;
+    var margin = 0.85;
+    var RightMargin = 200;
+    TileSize = 190;
+    var FrameMargin = 350;
     columnsNo = Math.floor((windowWidth - RightMargin) / TileSize);
     rowsNo = Math.floor((windowHeight - 2 * FrameMargin) / TileSize);
 
+    push();
+    Background = new Window(10, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight,
+        221, false, true, 240, 150, true);
+    Background.display();
+    pop();
 
-    for (var x = 0; x < columnsNo; x++) {
-        for (var y = 0; y < rowsNo; y++) {
+
+
+    push();
+    RightBar = new Window(5, 1550, windowHeight / 2, 350, 800,
+        221, false, false, 240, 150, true);
+    RightBar.display();
+    pop();
+
+
+
+    push();
+    for (let i = 0; i < Users; i++) {
+        Characters = new Window(5, FrameMargin / 2 + 10, 100 + 100 * i, 250, 90,
+            221, false, false, 250, 120, true, true);
+        Characters.display();
+    }
+    pop();
+
+
+    for (var x = 0; x < 5; x++) {
+        for (var y = 0; y < 3; y++) {
 
             noStroke();
 
@@ -85,17 +152,31 @@ function draw() {
 
             // square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
 
-            Tile = new Window(FrameMargin + x * TileSize + TileSize / 2, FrameMargin + y * TileSize + TileSize / 2, TileSize * margin, TileSize * margin, 250, false, true, 230,180, false);
+            Tile = new Window(5, FrameMargin + x * TileSize + TileSize / 2, 140 + y * TileSize + TileSize / 2, TileSize * margin, TileSize * margin, 250, false, true, 230, 180, false);
             Tile.display();
-            Tile.displayText("Miltos",Math.floor(random(8)),15);
+            Tile.displayText("Miltos", RandomNumbers[y * x], 11);
 
         }
     }
 
 
+    push();
+    for (let i = 0; i < Users; i++) {
 
 
+        Characters = new Window(5, FrameMargin / 2 + 10, 100 + 100 * i, 250, 90,
+            221, false, false, 250, 120, true, true);
+        Characters.display();
+        push();
+        translate(FrameMargin / 2 - 100, 70 + 100 * i);
+        scale(0.2);
+        image(img[i], 0, 0);
+        pop();
+
+    }
+    pop();
     if (LocalData != null) {
+
 
 
         var Microphones = [];
@@ -110,7 +191,15 @@ function draw() {
 
             }
             Colors.push((Object.values(LocalData[i])[0].color.hex));
+
+            push();
+            MicTile = new Window(5, 1550, 170, 150, 150,
+                (Colors[0]), true, false, 240, 150, true);
+            MicTile.display();
+            pop();
+
         }
+
 
         if (GridInit && socket.id) {
 
@@ -122,27 +211,27 @@ function draw() {
 
 
 
-        for (var x = 0; x < columnsNo; x++) {
-            for (var y = 0; y < rowsNo; y++) {
-                for (var i = 0; i < LocalData.length; i++) {
-                    noStroke();
-                    fill(210, 210, 210);
+        // for (var x = 0; x < columnsNo; x++) {
+        //     for (var y = 0; y < rowsNo; y++) {
+        //         for (var i = 0; i < LocalData.length; i++) {
+        //             noStroke();
+        //             fill(210, 210, 210);
 
-                    //  square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
-                    push();
-                    fill(color(Colors[i]).levels[0], color(Colors[i]).levels[1], color(Colors[i]).levels[2], Aux(Microphones[i]));
-                    square(FrameMargin + Positions[i].x * TileSize, FrameMargin + Positions[i].y * TileSize, TileSize * margin);
-                    pop();
-                }
-            }
-        }
+        //             //  square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
+        //             push();
+        //             fill(color(Colors[i]).levels[0], color(Colors[i]).levels[1], color(Colors[i]).levels[2], Aux(Microphones[i]));
+        //             square(FrameMargin + Positions[i].x * TileSize, FrameMargin + Positions[i].y * TileSize, TileSize * margin);
+        //             pop();
+        //         }
+        //     }
+        // }
     }
 
     push();
     noStroke();
     fill(246, 246, 246);
 
-    rect(windowWidth - RightMargin, 0, windowWidth, windowHeight);
+
     pop();
 
     push();
@@ -150,7 +239,6 @@ function draw() {
     noStroke();
     fill(bgcolor);
     var PersonalTileSize = 180;
-    square(windowWidth - RightMargin + (RightMargin - PersonalTileSize) / 2, FrameMargin, PersonalTileSize);
     pop();
 
     noStroke();
@@ -180,12 +268,12 @@ function draw() {
     ellipseMode(CENTER);
     // ellipse(windowWidth - RightMargin + (RightMargin - PersonalTileSize) / 2 + PersonalTileSize / 2, PersonalTileSize / 2 + FrameMargin, 100 + heightAux1 / 8, 100 + heightAux1 / 8);
 
-    xPos = windowWidth - RightMargin + (RightMargin - PersonalTileSize) / 2 + PersonalTileSize / 2;
-    yPos = PersonalTileSize / 2 + FrameMargin;
+    xPos = 1670 - RightMargin + (RightMargin - PersonalTileSize) / 2 + PersonalTileSize / 2;
+    yPos = 170;
     size = 100 + heightAux1 / 4;
     StrokeW = 2;
 
-    PixCircle(xPos, yPos, size, StrokeW, 1, 7);   //(xPos,yPos,diameter,strokeWeight,strokeGaps,pixelSize)
+    PixCircle(1550, yPos, size / 2, StrokeW, 1, 5);   //(xPos,yPos,diameter,strokeWeight,strokeGaps,pixelSize)
     // user.display();
     // userInput.display();
     // userInput.displayText("miltos");

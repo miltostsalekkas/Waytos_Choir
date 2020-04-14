@@ -3,9 +3,18 @@ const colors = require('riso-colors');
 const express = require('express');
 const socketIO = require('socket.io');
 const http = require("http");
+const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
+var CharactersNo;
+
+const dir = './assets/Characters/300ppi';
+
+fs.readdir(dir, (err, files) => {
+  CharactersNo = files.length;
+});
+
 
 app.use(express.static(__dirname));
 
@@ -21,11 +30,13 @@ io.on('connection',
   // We are given a websocket object in our function
   function (socket) {
 
-
+    
 
     console.log("We have a new client: " + socket.id);
     Users = Users + 1;
     console.log("Number od Users : " + Users);
+    socket.emit('CharNo',CharactersNo);
+    socket.emit('Users',Users);
 
     const color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -53,7 +64,6 @@ io.on('connection',
 
           for (var i = 0; i < IDs.length; i++) {
             if (data[IDs[i]] != null) {
-              data[IDs[i]].users = Users;
               data[IDs[i]].color = color;
               data[IDs[i]].position = Positions[i];
               PublicData[i] = { [IDs[i]]: data[IDs[i]] };
@@ -64,7 +74,6 @@ io.on('connection',
 
 
           socket.emit('Public', PublicData);
-
         }
       }
     );

@@ -1,11 +1,11 @@
 class Window {
-    constructor(x, y, w, h, Color, invert, extraShadow, shadowColorUp, shadowColorDown, TopBorder) {
+    constructor(margin, x, y, w, h, Color, invert, extraShadow, shadowColorUp, shadowColorDown, TopBorder, line) {
         this.x = x;
         this.y = y;
         this.w = w;
         this.h = h;
         this.color = color(Color);
-        this.margin = 5;
+        this.margin = margin;
         this.invert = invert;
         this.colorDown = color(255);
         this.colorUp = color(0);
@@ -13,6 +13,7 @@ class Window {
         this.shadowColorDown = shadowColorDown;
         this.shadowColorUp = shadowColorUp;
         this.TopBorder = TopBorder;
+        this.line = line;
     }
     display() {
 
@@ -59,6 +60,7 @@ class Window {
         endShape(CLOSE);
         pop();
         push();
+        noStroke();
         beginShape();
         fill(this.colorUp);
         vertex(this.x + this.w / 2, this.y + this.h / 2);
@@ -69,7 +71,8 @@ class Window {
         pop();
         if (this.TopBorder) {
             push()
-            fill(color(int(this.colorDown + 40)));
+            noStroke();
+            fill(color(int(this.colorDown + 20)));
             beginShape();
             vertex(this.x - this.w / 2, this.y - this.h / 2);
             vertex(this.x - this.w / 2 + this.margin, this.y - this.h / 2 + this.margin);
@@ -78,6 +81,7 @@ class Window {
             endShape(CLOSE);
             pop();
             push();
+            noStroke();
             beginShape();
             fill(this.colorDown);
             vertex(this.x - this.w / 2, this.y - this.h / 2);
@@ -88,19 +92,40 @@ class Window {
             pop();
         }
 
-
+        if (this.line) {
+            push();
+            stroke(150);
+            strokeWeight(2);
+            beginShape();
+            vertex(this.x-30,this.y+this.h/2*0.7);
+            vertex(this.x-30,this.y-this.h/2*0.7);
+            endShape();
+            pop();
+            push();
+            stroke(255);
+            strokeWeight(2);
+            beginShape();
+            vertex(this.x+3-30,this.y+this.h/2*0.7);
+            vertex(this.x+3-30,this.y-this.h/2*0.7);
+            endShape();
+            pop();
+        }
 
     }
 
-    displayText(textIn,numberIn,TextSize) {
+    displayText(textIn, numberIn, TextSize) {
         push();
         fill(0);
         textSize(TextSize)
         this.text = textIn;
         push();
         textAlign(LEFT);
-        text(this.text, this.x+TextSize+10, this.y+80);
+        text(this.text, this.x + TextSize + 10, this.y + 60);
+
         pop();
+        push();
+        textAlign(LEFT);
+        text(numberIn, this.x - 65, this.y + 60);
         pop();
     }
 
