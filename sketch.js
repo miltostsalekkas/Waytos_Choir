@@ -66,13 +66,7 @@ function setup() {
 
         }
     );
-    socket.on('CharNo',
-        // When we receive data
-        function (data) {
-            CharNo = data;
-
-        }
-    );
+   
     socket.on('Users',
         // When we receive data
         function (data) {
@@ -105,7 +99,13 @@ function ReadImages() {
     }
 }
 function draw() {
+    socket.on('CharNo',
+    // When we receive data
+    function (data) {
+        CharNo = data;
 
+    }
+);
     if (!ImagesRead) {
         ReadImages();
     }
