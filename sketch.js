@@ -1,4 +1,4 @@
-var noteglobal ={};
+var noteglobal = {};
 
 var mic, fft;
 var sensibility;
@@ -195,12 +195,22 @@ function draw() {
     }
     pop();
     push();
+    var markerHeight;
+    if (noteglobal.frequency > 130 && noteglobal.frequency <265) {
+        markerHeight = map(noteglobal.frequency, 130,265, 780, 390);
+    }
+    else{markerHeight = 780};
+    translate(1460, markerHeight);  //390  780
 
-    translate(1460, 422);
+
     scale(0.2);
+
     image(marker, 0, 0);
+
     pop();
 
+
+    console.log(noteglobal);
     for (var x = 0; x < 5; x++) {
         for (var y = 0; y < 3; y++) {
 
@@ -235,7 +245,10 @@ function draw() {
     }
     pop();
 
-    console.log(noteglobal);
+
+
+
+
     if (LocalData != null) {
 
 
@@ -342,6 +355,8 @@ function draw() {
 
 //Pixelates a Circle
 
+
+
 function PixCircle(xPos, yPos, CircleSize, thickness, gaps, pixelRatio) {
     push();
     noStroke();
@@ -364,6 +379,7 @@ function PixCircle(xPos, yPos, CircleSize, thickness, gaps, pixelRatio) {
 
 function mouseMoved() {
     userStartAudio();
+
 }
 
 
