@@ -1,5 +1,7 @@
 class Window {
-    constructor(margin, x, y, w, h, Color, invert, extraShadow, shadowColorUp, shadowColorDown, TopBorder, line) {
+    constructor(margin, x, y, w, h, Color, invert, extraShadow, shadowColorUp,
+        shadowColorDown, TopBorder, line, opacity, LowBorder, OneShadow) {
+
         this.x = x;
         this.y = y;
         this.w = w;
@@ -14,9 +16,27 @@ class Window {
         this.shadowColorUp = shadowColorUp;
         this.TopBorder = TopBorder;
         this.line = line;
+        this.opacity = opacity;
+        this.LowBorder = LowBorder;
+        this.OneShadow = OneShadow;
     }
     display() {
 
+        if (this.OneShadow != null) {
+            push();
+            stroke(4)
+            strokeWeight(5);
+            fill(0);
+            beginShape();
+            vertex(this.x + this.OneShadow - this.w / 2, this.y + this.OneShadow + this.h / 2);
+            vertex(this.x + this.OneShadow + this.w / 2, this.y + this.OneShadow + this.h / 2);
+            vertex(this.x + this.OneShadow + this.w / 2, this.y + this.OneShadow - this.h / 2);
+            vertex(this.x + this.w / 2, this.y - this.h / 2);
+            vertex(this.x - this.w / 2, this.y - this.h / 2);
+            vertex(this.x - this.w / 2, this.y + this.h / 2);
+            endShape(CLOSE);
+            pop();
+        }
         if (this.extraShadow) {
             for (var i = 0; i < 3; i++) {
                 push();
@@ -37,6 +57,7 @@ class Window {
             this.colorDown = this.shadowColorUp;
             this.colorUp = this.shadowColorDown;
         }
+
         push();
         noStroke();
         fill(this.color);
@@ -48,31 +69,36 @@ class Window {
         endShape(CLOSE);
 
         pop();
-
-        push();
-        noStroke();
-        fill(color(int(this.colorUp + 40)));
-        beginShape();
-        vertex(this.x + this.w / 2, this.y + this.h / 2);
-        vertex(this.x + this.w / 2 - this.margin, this.y + this.h / 2 - this.margin);
-        vertex(this.x + this.w / 2 - this.margin, this.y - this.h / 2 + this.margin);
-        vertex(this.x + this.w / 2, this.y - this.h / 2);
-        endShape(CLOSE);
-        pop();
-        push();
-        noStroke();
-        beginShape();
-        fill(this.colorUp);
-        vertex(this.x + this.w / 2, this.y + this.h / 2);
-        vertex(this.x - this.w / 2, this.y + this.h / 2);
-        vertex(this.x - this.w / 2 + this.margin, this.y + this.h / 2 - this.margin);
-        vertex(this.x + this.w / 2 - this.margin, this.y + this.h / 2 - this.margin);
-        endShape(CLOSE);
-        pop();
+        if (!this.LowBorder) {
+            push();
+            noStroke();
+            fill(color(int(this.colorUp + 40)));
+            beginShape();
+            vertex(this.x + this.w / 2, this.y + this.h / 2);
+            vertex(this.x + this.w / 2 - this.margin, this.y + this.h / 2 - this.margin);
+            vertex(this.x + this.w / 2 - this.margin, this.y - this.h / 2 + this.margin);
+            vertex(this.x + this.w / 2, this.y - this.h / 2);
+            endShape(CLOSE);
+            pop();
+            push();
+            noStroke();
+            beginShape();
+            fill(this.colorUp);
+            vertex(this.x + this.w / 2, this.y + this.h / 2);
+            vertex(this.x - this.w / 2, this.y + this.h / 2);
+            vertex(this.x - this.w / 2 + this.margin, this.y + this.h / 2 - this.margin);
+            vertex(this.x + this.w / 2 - this.margin, this.y + this.h / 2 - this.margin);
+            endShape(CLOSE);
+            pop();
+        }
         if (this.TopBorder) {
             push()
             noStroke();
-            fill(color(int(this.colorDown + 20)));
+            var col = color(int(this.colorDown + 20));
+            if (this.opacity) {
+                col.setAlpha(170);
+            }
+            fill(col);
             beginShape();
             vertex(this.x - this.w / 2, this.y - this.h / 2);
             vertex(this.x - this.w / 2 + this.margin, this.y - this.h / 2 + this.margin);
@@ -83,7 +109,11 @@ class Window {
             push();
             noStroke();
             beginShape();
-            fill(this.colorDown);
+            var col2 = color(this.colorDown)
+            if (this.opacity) {
+                col2.setAlpha(100);
+            }
+            fill(col2);
             vertex(this.x - this.w / 2, this.y - this.h / 2);
             vertex(this.x + this.w / 2, this.y - this.h / 2);
             vertex(this.x + this.w / 2 - this.margin, this.y - this.h / 2 + this.margin);
@@ -97,35 +127,56 @@ class Window {
             stroke(150);
             strokeWeight(2);
             beginShape();
-            vertex(this.x-30,this.y+this.h/2*0.7);
-            vertex(this.x-30,this.y-this.h/2*0.7);
+            vertex(this.x - 30, this.y + this.h / 2 * 0.7);
+            vertex(this.x - 30, this.y - this.h / 2 * 0.7);
             endShape();
             pop();
             push();
             stroke(255);
             strokeWeight(2);
             beginShape();
-            vertex(this.x+3-30,this.y+this.h/2*0.7);
-            vertex(this.x+3-30,this.y-this.h/2*0.7);
+            vertex(this.x + 3 - 30, this.y + this.h / 2 * 0.7);
+            vertex(this.x + 3 - 30, this.y - this.h / 2 * 0.7);
             endShape();
             pop();
         }
 
+
     }
 
-    displayText(textIn, numberIn, TextSize) {
+    HorLine(x,y,w) {
+        push();
+        stroke(150);
+        strokeWeight(2);
+        beginShape();
+        vertex(x + w / 2, y);
+        vertex(x -w / 2, y);
+        endShape();
+        pop();
+        push();
+        stroke(255);
+        strokeWeight(2);
+        beginShape();
+        vertex(x + w / 2,y+2);
+        vertex(x - w / 2,y+2);
+        endShape();
+        pop();
+    }
+
+    displayText(textIn, numberIn, TextSize, w, h) {
         push();
         fill(0);
+        noStroke();
         textSize(TextSize)
         this.text = textIn;
         push();
         textAlign(LEFT);
-        text(this.text, this.x + TextSize + 10, this.y + 60);
+        text(this.text, this.x + w, this.y + h);
 
         pop();
         push();
         textAlign(LEFT);
-        text(numberIn, this.x - 65, this.y + 60);
+        text(numberIn, this.x - 65, this.y + h);
         pop();
     }
 

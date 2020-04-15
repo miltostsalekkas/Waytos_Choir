@@ -1,10 +1,9 @@
 <html>
 
 <head>
+
   <title>Social Mic</title>
-  <link rel="icon" 
-      type="image/png" 
-      href="assets/favicon-32x32.png">
+  <link rel="icon" type="image/png" href="assets/favicon-32x32.png">
   <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
   <style>
     body {
@@ -12,9 +11,14 @@
       margin: 0;
       cursor: pointer;
     }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script> <!-- P5 js Library -->
 
+    /* #detector {
+      display: none;
+    } */
+  </style>
+ 
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script> <!-- P5 js Library -->
+  <script src="p5.dom.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> <!-- Socket IO Library -->
 
   <!--
@@ -23,11 +27,18 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script> <!-- P5 sound Js -->
 
   <!-- <script src="sketch.js"></script> -->
-  <script src = 'sketch.js'> </script>
-  <script src = 'window.js'> </script>
-  <script src = './tuner.js'> </script>
+  <script src='sketch.js'> </script>
+  <script src='window.js'> </script>
+  <script src='pitchdetect.js'> </script>
 </head>
 
-<body></body>
+<body>
+  <div id="detector" class="vague">
+    <div class="pitch"><span id="pitch">--</span>Hz</div>
+    <div class="note"><span id="note">-</span></div>
+    <div id="detune"><span id="detune_amt">--</span><span id="flat">cents &#9837;</span><span id="sharp">cents
+        &#9839;</span></div>
+  </div>
+</body>
 
 </html>

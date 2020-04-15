@@ -30,13 +30,14 @@ io.on('connection',
   // We are given a websocket object in our function
   function (socket) {
 
-    
+
 
     console.log("We have a new client: " + socket.id);
     Users = Users + 1;
     console.log("Number od Users : " + Users);
-    socket.emit('CharNo',CharactersNo);
-    socket.emit('Users',Users);
+    socket.emit('CharNo', CharactersNo);
+    socket.broadcast.emit('Users', { Users: Users });
+    socket.emit('Users', { Users: Users });
 
     const color = colors[Math.floor(Math.random() * colors.length)];
 
@@ -84,6 +85,8 @@ io.on('connection',
       console.log("Client has disconnected");
       Users = Users - 1;
       console.log("Number of Users : " + Users);
+      socket.broadcast.emit('Users', { Users: Users });
+      socket.emit('Users', { Users: Users });
     });
   }
 );

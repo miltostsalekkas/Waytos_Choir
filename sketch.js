@@ -18,15 +18,26 @@ var Background;
 var Characters;
 var RightBar;
 var MicTile;
+var ColorLegend;
+var Slider;
+var PaletteDock;
+var Palette;
 
 var CharNo;
 var Users;
+
+var marker;
 
 var img = [];
 var ImagesRead = false;
 
 var RandomNumbers = [];
 var NoteColors = ['#F393B5', '#2DB467', '#F05A24', '#5555AA', '#EE3D3D', '#AB88BE', '#E9E85E', '#CE7F3E'];
+
+
+
+let noteSpan;
+
 
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
@@ -66,11 +77,17 @@ function setup() {
 
         }
     );
-   
+    socket.on('CharNo',
+        // When we receive data
+        function (data) {
+            CharNo = data;
+
+        }
+    );
     socket.on('Users',
         // When we receive data
         function (data) {
-            Users = data;
+            Users = data.Users;
         }
     );
 
@@ -82,6 +99,9 @@ function setup() {
     for (var i = 0; i < 15; i++) {
         RandomNumbers.push(Math.floor(random(1, 8)));
     }
+    marker = loadImage('./assets/Characters/marker.png');
+    noteSpan = select('#note');
+
 }
 
 function keyTyped(bla) {
@@ -99,13 +119,8 @@ function ReadImages() {
     }
 }
 function draw() {
-    socket.on('CharNo',
-    // When we receive data
-    function (data) {
-        CharNo = data;
 
-    }
-);
+
     if (!ImagesRead) {
         ReadImages();
     }
@@ -130,6 +145,8 @@ function draw() {
     RightBar = new Window(5, 1550, windowHeight / 2, 350, 800,
         221, false, false, 240, 150, true);
     RightBar.display();
+    RightBar.HorLine(1550, 280, 260);
+    RightBar.HorLine(1550, 350, 260);
     pop();
 
 
@@ -142,6 +159,44 @@ function draw() {
     }
     pop();
 
+    push();
+    for (var i = 0; i < NoteColors.length; i++) {
+        ColorLegend = new Window(3, 470 + 105 * i, 800, 80, 80,
+            NoteColors[i], false, false, 200, 150, true, false, true, true, 4);
+        ColorLegend.display();
+        ColorLegend.displayText(i, "", 11, -30, 30);
+    }
+    pop();
+
+    push();
+    MicTile = new Window(5, 1550, 170, 150, 150,
+        (NoteColors[3]), true, false, 240, 150, true);
+    MicTile.display();
+    pop();
+
+    push();
+    Slider = new Window(5, 1490, 600, 17, 450,
+        (0), true, false, 240, 150, true);
+    Slider.display();
+    pop();
+    push();
+    PaletteDock = new Window(5, 1600, 600, 80, 450,
+        (221), false, false, 240, 150, true);
+    PaletteDock.display();
+    pop();
+    push();
+    for (var i = 0; i < NoteColors.length; i++) {
+        Palette = new Window(5, 1600, 422 + 50 * i, 40, 40,
+            NoteColors[i], true, false, 0, 60, true, false, true, true, null, true);
+        Palette.display();
+    }
+    pop();
+    push();
+
+    translate(1460, 422);
+    scale(0.2);
+    image(marker, 0, 0);
+    pop();
 
     for (var x = 0; x < 5; x++) {
         for (var y = 0; y < 3; y++) {
@@ -154,18 +209,19 @@ function draw() {
 
             Tile = new Window(5, FrameMargin + x * TileSize + TileSize / 2, 140 + y * TileSize + TileSize / 2, TileSize * margin, TileSize * margin, 250, false, true, 230, 180, false);
             Tile.display();
-            Tile.displayText("Miltos", RandomNumbers[y * x], 11);
+            Tile.displayText("Miltos", RandomNumbers[y * x], 11, 25, 70);
 
         }
     }
 
-
+    
+   
     push();
     for (let i = 0; i < Users; i++) {
 
 
         Characters = new Window(5, FrameMargin / 2 + 10, 100 + 100 * i, 250, 90,
-            221, false, false, 250, 120, true, true);
+            221, false, false, 250, 120, true, true, true);
         Characters.display();
         push();
         translate(FrameMargin / 2 - 100, 70 + 100 * i);
@@ -192,11 +248,7 @@ function draw() {
             }
             Colors.push((Object.values(LocalData[i])[0].color.hex));
 
-            push();
-            MicTile = new Window(5, 1550, 170, 150, 150,
-                (Colors[0]), true, false, 240, 150, true);
-            MicTile.display();
-            pop();
+
 
         }
 
@@ -277,6 +329,19 @@ function draw() {
     // user.display();
     // userInput.display();
     // userInput.displayText("miltos");
+
+
+    if (noteSpan.html() != "-") {
+
+
+        // get the note from the html
+        note = noteSpan.html();
+
+        // draw the note to the screen
+        text(note, 200, 200);
+    }
+console.log(note);
+
 }
 
 //Pixelates a Circle
