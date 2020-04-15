@@ -65,8 +65,8 @@ function setup() {
     getAudioContext().suspend();
     mic = new p5.AudioIn();
     mic.start();
-    fft = new p5.FFT();
-    fft.setInput(mic);
+    // fft = new p5.FFT();
+    // fft.setInput(mic);
 
 
     Id = socket.id;
@@ -232,6 +232,8 @@ function draw() {
 
     }
     pop();
+
+    console.log(LocalData);
     if (LocalData != null) {
 
 
@@ -239,18 +241,19 @@ function draw() {
         var Microphones = [];
         var Positions = [{ x: 1, y: 2 }];
         var Colors = [];
+        if (LocalData[i]) {
+            for (var i = 0; i < LocalData.length; i++) {
+                Microphones.push(Object.values(LocalData[i])[0].Volume);
+                Positions.push(Object.values(LocalData[i])[0].position);
+                if (Object.keys(LocalData[i])[0] === socket.id) {
+                    bgcolor = (Object.values(LocalData[i])[0].color.hex);
 
-        for (var i = 0; i < LocalData.length; i++) {
-            Microphones.push(Object.values(LocalData[i])[0].Volume);
-            Positions.push(Object.values(LocalData[i])[0].position);
-            if (Object.keys(LocalData[i])[0] === socket.id) {
-                bgcolor = (Object.values(LocalData[i])[0].color.hex);
+                }
+                Colors.push((Object.values(LocalData[i])[0].color.hex));
+
+
 
             }
-            Colors.push((Object.values(LocalData[i])[0].color.hex));
-
-
-
         }
 
 
@@ -300,8 +303,8 @@ function draw() {
 
 
 
-    // var volume = mic.getLevel();
-    var volume = 0;
+    var volume = mic.getLevel();
+
     if (volume > 0.01) {
         sendmouse(volume);
 
@@ -358,8 +361,7 @@ function PixCircle(xPos, yPos, CircleSize, thickness, gaps, pixelRatio) {
 
 
 function mouseMoved() {
-     userStartAudio();
-
+    userStartAudio();
 }
 
 
