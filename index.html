@@ -12,11 +12,13 @@
       cursor: pointer;
     }
 
-    /* #detector {
+    #detector {
       display: none;
-    } */
+    }
   </style>
- 
+  <!-- from a free CDN -->
+  
+
   <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script> <!-- P5 js Library -->
   <script src="p5.dom.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> <!-- Socket IO Library -->
@@ -25,11 +27,28 @@
       We use unpkg instead of cdnjs as its recommended by tone.js docs
     -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script> <!-- P5 sound Js -->
-
   <!-- <script src="sketch.js"></script> -->
+  
+
+<body>
+
+  <div  id="detector" class="meter">
+    <div  id="detector" class="meter-dot"></div>
+    <div id="detector"  class="meter-pointer"></div>
+  </div>
+  <div id="detector" class="notes">
+    <div  id="detector" class="notes-list"></div>
+    <div  id="detector" class="frequency"> <span>Hzzz</span></div>
+  </div>
+  <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+
   <script src='sketch.js'> </script>
   <script src='window.js'> </script>
-
+  <script src="tuner.js"></script>
+  <script src="aubio.js"></script>
+  <script src="notes.js"></script>
+  <script src="app.js"></script>
+</body>
 </head>
 
 

@@ -1,3 +1,5 @@
+var noteglobal ={};
+
 var mic, fft;
 var sensibility;
 var LocalData;
@@ -233,7 +235,7 @@ function draw() {
     }
     pop();
 
-    console.log(LocalData);
+    console.log(noteglobal);
     if (LocalData != null) {
 
 
