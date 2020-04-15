@@ -34,7 +34,7 @@ var ImagesRead = false;
 var RandomNumbers = [];
 var NoteColors = ['#F393B5', '#2DB467', '#F05A24', '#5555AA', '#EE3D3D', '#AB88BE', '#E9E85E', '#CE7F3E'];
 
-
+const model_url = 'https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/';
 
 let noteSpan;
 
@@ -67,6 +67,7 @@ function setup() {
     mic.start();
     fft = new p5.FFT();
     fft.setInput(mic);
+
 
     Id = socket.id;
 
@@ -214,8 +215,8 @@ function draw() {
         }
     }
 
-    
-   
+
+
     push();
     for (let i = 0; i < Users; i++) {
 
@@ -299,7 +300,8 @@ function draw() {
 
 
 
-    var volume = mic.getLevel();
+    // var volume = mic.getLevel();
+    var volume = 0;
     if (volume > 0.01) {
         sendmouse(volume);
 
@@ -331,17 +333,6 @@ function draw() {
     // userInput.displayText("miltos");
 
 
-    if (noteSpan.html() != "-") {
-
-
-        // get the note from the html
-        note = noteSpan.html();
-
-        // draw the note to the screen
-        text(note, 200, 200);
-    }
-console.log(note);
-
 }
 
 //Pixelates a Circle
@@ -367,8 +358,10 @@ function PixCircle(xPos, yPos, CircleSize, thickness, gaps, pixelRatio) {
 
 
 function mouseMoved() {
-    userStartAudio();
+     userStartAudio();
+
 }
+
 
 // // Function for sending to the socket
 function sendmouse(volume) {
