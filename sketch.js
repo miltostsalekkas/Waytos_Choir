@@ -196,10 +196,10 @@ function draw() {
     pop();
     push();
     var markerHeight;
-    if (noteglobal.frequency > 130 && noteglobal.frequency <265) {
-        markerHeight = map(noteglobal.frequency, 130,265, 780, 390);
+    if (noteglobal.frequency > 130 && noteglobal.frequency < 265) {
+        markerHeight = map(noteglobal.frequency, 130, 265, 780, 390);
     }
-    else{markerHeight = 780};
+    else { markerHeight = 780 };
     translate(1460, markerHeight);  //390  780
 
 
@@ -238,7 +238,7 @@ function draw() {
         Characters.display();
         push();
         translate(FrameMargin / 2 - 100, 70 + 100 * i);
-        scale(0.2);
+        scale(0.1);
         image(img[i], 0, 0);
         pop();
 

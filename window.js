@@ -1,3 +1,5 @@
+
+
 class Window {
     constructor(margin, x, y, w, h, Color, invert, extraShadow, shadowColorUp,
         shadowColorDown, TopBorder, line, opacity, LowBorder, OneShadow) {
@@ -96,7 +98,7 @@ class Window {
             noStroke();
             var col = color(int(this.colorDown + 20));
             if (this.opacity) {
-                col.setAlpha(170);
+                col.setAlpha(this.opacity);
             }
             fill(col);
             beginShape();
@@ -144,40 +146,59 @@ class Window {
 
     }
 
-    HorLine(x,y,w) {
+    HorLine(x, y, w) {
         push();
         stroke(150);
         strokeWeight(2);
         beginShape();
         vertex(x + w / 2, y);
-        vertex(x -w / 2, y);
+        vertex(x - w / 2, y);
         endShape();
         pop();
         push();
         stroke(255);
         strokeWeight(2);
         beginShape();
-        vertex(x + w / 2,y+2);
-        vertex(x - w / 2,y+2);
+        vertex(x + w / 2, y + 2);
+        vertex(x - w / 2, y + 2);
         endShape();
         pop();
     }
 
-    displayText(textIn, numberIn, TextSize, w, h) {
+    displayText(textIn, numberIn, TextSize, w, h, align, opacity) {
         push();
-        fill(0);
+
+        textSize(TextSize);
+        let TextColor = color(0);
+
+        if (opacity != null) {TextColor.setAlpha(opacity);}
+
+        fill(TextColor);
         noStroke();
-        textSize(TextSize)
+        if (align === 0) {
+            textAlign(LEFT);
+        }
+        else if (align === 1) {
+            textAlign(CENTER);
+        }
+        else if (align === 2) {
+            textAlign(LEFT);
+        }
+        else {
+            textAlign(LEFT);
+        }
+        
+       
         this.text = textIn;
-        push();
-        textAlign(LEFT);
+
+
         text(this.text, this.x + w, this.y + h);
 
-        pop();
-        push();
-        textAlign(LEFT);
+
         text(numberIn, this.x - 65, this.y + h);
         pop();
+
+        return textWidth(this.text);
     }
 
 }
