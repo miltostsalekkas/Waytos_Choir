@@ -165,13 +165,50 @@ class Window {
         pop();
     }
 
+    VertLine(x, y, h) {
+        push();
+        stroke(150);
+        strokeWeight(2);
+        beginShape();
+        vertex(x, y + h / 2);
+        vertex(x, y - h / 2);
+        endShape();
+        pop();
+        push();
+        stroke(255);
+        strokeWeight(2);
+        beginShape();
+        vertex(x + 2, y + h / 2);
+        vertex(x + 2, y - h / 2);
+        endShape();
+        pop();
+    }
+
+    displayArrow(x, y, size, r,rx) {
+     
+        r = radians(r);
+       
+        push();
+        fill(0);
+        beginShape();
+
+        for (r; r < 4 * PI; r = r + (2 * PI) / 3) {
+            var xPos = x + Math.cos(r) * size*rx;
+            var yPos = y + Math.sin(r) * size;
+
+            vertex(xPos, yPos);
+        }
+        endShape(CLOSE);
+        pop();
+    }
+
     displayText(textIn, numberIn, TextSize, w, h, align, opacity) {
         push();
 
         textSize(TextSize);
         let TextColor = color(0);
 
-        if (opacity != null) {TextColor.setAlpha(opacity);}
+        if (opacity != null) { TextColor.setAlpha(opacity); }
 
         fill(TextColor);
         noStroke();
@@ -187,8 +224,8 @@ class Window {
         else {
             textAlign(LEFT);
         }
-        
-       
+
+
         this.text = textIn;
 
 
@@ -198,7 +235,7 @@ class Window {
         text(numberIn, this.x - 65, this.y + h);
         pop();
 
-        return textWidth(this.text);
+
     }
 
 }

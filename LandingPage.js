@@ -19,20 +19,20 @@ function setup() {
 
     createCanvas(windowWidth, windowHeight)
     
-    socket = io();
-    socket.on('CharNo',
-        // When we receive data
-        function (data) {
-            CharNo = data;
+    // socket = io();
+    // socket.on('CharNo',
+    //     // When we receive data
+    //     function (data) {
+    //         CharNo = data;
 
-        }
-    );
-    socket.on('Users',
-        // When we receive data
-        function (data) {
-            Users = data.Users;
-        }
-    );
+    //     }
+    // );
+    // socket.on('Users',
+    //     // When we receive data
+    //     function (data) {
+    //         Users = data.Users;
+    //     }
+    // );
 }
 
 
@@ -65,7 +65,7 @@ function keyPressed() {
     if (inputString.length > 0 && keyCode === 13) {
         if (UserLength) {
             startPressed = true;
-            window.open('./index.html', '_blank');
+            window.open('./index.html', '_blank','resizable,height=230,width=330');
         }
     }
 }
