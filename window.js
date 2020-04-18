@@ -143,7 +143,6 @@ class Window {
             pop();
         }
 
-
     }
 
     HorLine(x, y, w) {
@@ -184,16 +183,16 @@ class Window {
         pop();
     }
 
-    displayArrow(x, y, size, r,rx) {
-     
+    displayArrow(x, y, size, r, rx) {
+
         r = radians(r);
-       
+
         push();
         fill(0);
         beginShape();
 
         for (r; r < 4 * PI; r = r + (2 * PI) / 3) {
-            var xPos = x + Math.cos(r) * size*rx;
+            var xPos = x + Math.cos(r) * size * rx;
             var yPos = y + Math.sin(r) * size;
 
             vertex(xPos, yPos);
@@ -219,7 +218,7 @@ class Window {
             textAlign(CENTER);
         }
         else if (align === 2) {
-            textAlign(LEFT);
+            textAlign(RIGHT);
         }
         else {
             textAlign(LEFT);
@@ -235,7 +234,12 @@ class Window {
         text(numberIn, this.x - 65, this.y + h);
         pop();
 
-
+    }
+    reportPos() {
+        return {
+            minBorder:{ x: this.x - this.w / 2, y: this.y - this.h / 2 },
+            maxBorder:{ x: this.x + this.w / 2, y: this.y + this.h / 2 }
+        }
     }
 
 }
