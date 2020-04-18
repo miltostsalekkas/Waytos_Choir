@@ -25,10 +25,10 @@ var ImagesRead;
 var ChaarId = [];
 
 
-var HairId = 1;
-var EyesId = 1;
-var MouthId = 1;
-var SkinId = 1;
+var HairId = 0;
+var EyesId = 0;
+var MouthId = 0;
+var SkinId = 0;
 
 var Outline;
 
@@ -120,7 +120,7 @@ function draw() {
     userWidth = userHeight * 1.485;
     FontSize = 0.017 * windowHeight;
 
-    background(0);
+    background(221);
 
 
     if (!ImagesRead) {
@@ -255,31 +255,31 @@ function draw() {
 
         // Limiting ID from 1 to 47
 
-        if (HairId < 1 && LeftArrowState[0]) {
+        if (HairId === 0 && LeftArrowState[0]) {
             HairId = 44;
         }
-        else if (HairId === 44&& RightArrowState[0]) {
+        else if (HairId === 44 && RightArrowState[0]) {
             HairId = 0;
         }
 
-        if (EyesId < 1 && LeftArrowState[0]) {
+        if (EyesId === 0 && LeftArrowState[1]) {
             EyesId = 44;
         }
-        else if (EyesId === 44&& RightArrowState[0]) {
+        else if (EyesId === 44 && RightArrowState[1]) {
             EyesId = 0;
         }
 
-        if (MouthId < 1 && LeftArrowState[0]) {
+        if (MouthId === 0 && LeftArrowState[2]) {
             MouthId = 44;
         }
-        else if (MouthId === 44&& RightArrowState[0]) {
+        else if (MouthId === 44 && RightArrowState[2]) {
             MouthId = 0;
         }
 
-        if (SkinId < 1 && LeftArrowState[0]) {
+        if (SkinId === 0 && LeftArrowState[3]) {
             SkinId = 44;
         }
-        else if (SkinId === 44&& RightArrowState[0]) {
+        else if (SkinId === 44 && RightArrowState[3]) {
             SkinId = 0;
         }
 
@@ -288,7 +288,7 @@ function draw() {
         console.log(HairId, EyesId, MouthId, SkinId);
     }
 
-   
+
     image(Skin[SkinId], 0, 0);
     image(Outline, 0, 0);
     image(Hair[HairId], 0, 0);
