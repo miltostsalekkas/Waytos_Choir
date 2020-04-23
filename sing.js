@@ -5,7 +5,7 @@ if (noteglobal.frequency != null && noteglobal.frequency < 440 && noteglobal.fre
 
 function sing(notes) {
     if (notes) {
-        setVoiceness(1)
+        // setVoiceness(1)
         var singing;
         var frequency = notes.frequency;
         var note = notes.name;
