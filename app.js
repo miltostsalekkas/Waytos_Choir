@@ -38,7 +38,7 @@ Application.prototype.start = function () {
 Application.prototype.updateFrequencyBars = function () {
   if (this.tuner.analyser) {
     this.tuner.analyser.getByteFrequencyData(this.frequencyData)
-    this.frequencyBars.update(this.frequencyData)
+    // this.frequencyBars.update(this.frequencyData)
   }
   requestAnimationFrame(this.updateFrequencyBars.bind(this))
 }

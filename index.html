@@ -1,8 +1,10 @@
 <html>
 
 <head>
-
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <script src="pink-trombone.min.js"  type="module"></script>
   <title>Waytos Chorale</title>
+
   <link rel="icon" type="image/png" href="assets/favicon-32x32.png">
   <meta name="viewport" content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">
   <style>
@@ -15,39 +17,63 @@
     #detector {
       display: none;
     }
+
+    .videoplay {
+
+      display: none;
+    }
   </style>
   <!-- from a free CDN -->
-  
+
+
+  <!-- <script src='Tone.js'></script> -->
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script> <!-- P5 js Library -->
-  <script src="p5.dom.js"></script>
+  <!-- <script src="p5.dom.js"></script> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> <!-- Socket IO Library -->
 
   <!--
       We use unpkg instead of cdnjs as its recommended by tone.js docs
     -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script> <!-- P5 sound Js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/addons/p5.sound.js"></script>
   <!-- <script src="sketch.js"></script> -->
-  
+
 
 <body>
 
-  <div  id="detector" class="meter">
-    <div  id="detector" class="meter-dot"></div>
-    <div id="detector"  class="meter-pointer"></div>
+
+  <!-- <div id="tractCanvas" >
+  </div> -->
+<pink-trombone></pink-trombone>
+
+  <!-- <script src="/pink_trompone/pinkTrompone.js"></script> -->
+
+  <div id="detector" class="meter">
+    <div id="detector" class="meter-dot"></div>
+    <div id="detector" class="meter-pointer"></div>
   </div>
   <div id="detector" class="notes">
-    <div  id="detector" class="notes-list"></div>
-    <div  id="detector" class="frequency"> <span>Hzzz</span></div>
+    <div id="detector" class="notes-list"></div>
+    <div id="detector" class="frequency"> <span>Hzzz</span></div>
   </div>
-  <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
 
-  <script src='sketch.js'> </script>
+
+
   <script src='window.js'> </script>
   <script src="tuner.js"></script>
   <script src="aubio.js"></script>
   <script src="notes.js"></script>
   <script src="app.js"></script>
+  <script src='sketch.js'> </script>
+  <script src='voiceSimulator.js'> </script>
+  <script src='sing.js'> </script>
+
+
+
+  <!-- <script src="client.js"></script> -->
+
+
+  <!-- <video class='videoplay' id="localVideo" autoplay playsinline controls="true"></video> -->
 </body>
 </head>
 

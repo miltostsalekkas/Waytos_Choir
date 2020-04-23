@@ -72,12 +72,16 @@ io.on('connection',
           }
 
 
-
-
           socket.emit('Public', PublicData);
         }
       }
     );
+
+    socket.on('offer', function (data) {
+
+      console.log("Data is : ", data);
+    });
+
 
     socket.on('disconnect', function () {
 
@@ -88,6 +92,19 @@ io.on('connection',
       socket.broadcast.emit('Users', { Users: Users });
       socket.emit('Users', { Users: Users });
     });
+
+    socket.on('signal', (toId, message) => {
+      io.to(toId).emit('signal', socket.id, message);
+    });
+
+    socket.on("message", function (data) {
+      io.sockets.emit("broadcast-message", socket.id, data);
+    })
+
+    socket.on('disconnect', function () {
+      io.sockets.emit("user-left", socket.id);
+    })
+
   }
 );
 

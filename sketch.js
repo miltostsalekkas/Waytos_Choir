@@ -20,7 +20,7 @@ var Background;
 var Characters;
 var RightBar;
 var MicTile;
-var ColorLegend;
+var LowerPitchTile = [];
 var Slider;
 var PaletteDock;
 var Palette;
@@ -28,17 +28,22 @@ var Palette;
 var CharNo;
 var Users;
 
+var chordNum = 5;
+
 var marker;
 
 var img = [];
 var ImagesRead = false;
 
-var RandomNumbers = [];
-var NoteColors = ['#F393B5', '#2DB467', '#F05A24', '#5555AA', '#EE3D3D', '#AB88BE', '#E9E85E', '#CE7F3E'];
 
+var RandomNumbers = [];
+var NoteColors = ['#F393B5', '#2DB467', '#F05A24', '#5555AA', '#EE3D3D', '#AB88BE', '#E9E85E', '#5EBDCC', '#04D939', '#A7989A', '#CE7F3E', '#F24968'];
 const model_url = 'https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/pitch-detection/crepe/';
 
 let noteSpan;
+var noteNum = 12;
+var LowerPTileState = [false, false, false, false]
+
 
 
 function windowResized() {
@@ -51,7 +56,6 @@ function preload() {
 }
 
 function setup() {
-
 
 
     createCanvas(windowWidth, windowHeight);
@@ -95,124 +99,245 @@ function setup() {
     );
 
 
-    user = new Window(5, windowWidth / 2, windowHeight / 2, 390, 220, 200, false, true);
-    userInput = new Window(5, windowWidth / 2, windowHeight / 2, 250, 50, 250, true);
+    // user = new Window(5, windowWidth / 2, windowHeight / 2, 390, 220, 200, false, true);
+    // userInput = new Window(5, windowWidth / 2, windowHeight / 2, 250, 50, 250, true);
 
 
     for (var i = 0; i < 15; i++) {
-        RandomNumbers.push(Math.floor(random(1, 8)));
+        RandomNumbers.push(Math.floor(random(1, 12)));
     }
     marker = loadImage('./assets/Characters/marker.png');
     noteSpan = select('#note');
 
+
+    // synth = new Tone.Synth().toMaster();
+
+
 }
+
+////////////////////user
+////////////////////
+function mousePressed(event) {
+
+    for (var i = 0; i < NoteColors.length; i++) {
+        if (event.clientX > LowerPitchTile[i].reportPos().minBorder.x &&
+            event.clientX < LowerPitchTile[i].reportPos().maxBorder.x &&
+            event.clientY > LowerPitchTile[i].reportPos().minBorder.y &&
+            event.clientY < LowerPitchTile[i].reportPos().maxBorder.y
+        ) {
+            LowerPTileState[i] = true;
+        }
+    }
+}
+
+function mouseReleased() {
+
+    LowerPTileState = [false, false, false, false];
+    pinkTromboneElement.start();
+}
+////////////////////
+////////////////////
 
 function keyTyped(bla) {
     return bla;
 }
 
+
 function ReadImages() {
-    if (CharNo != null) {
-        for (var i = 0; i < CharNo; i++) {
 
-            img[i] = loadImage('./assets/Characters/300ppi/' + (i + 1) + '.png');
+    for (var i = 0; i < 45; i++) {
 
-        }
-        ImagesRead = true;
+        img[i] = loadImage('./assets/Characters/300ppi/' + (i + 1) + '.png');
+
     }
+    ImagesRead = true;
+
 }
+
 function draw() {
+    // console.log(noteglobal);
+    // if (volume > 0.1) {
+
+    // }
+
+
+    //create a synth and connect it to the master output (your speakers)
 
 
     if (!ImagesRead) {
         ReadImages();
     }
 
-
     var margin = 0.85;
     var RightMargin = 200;
-    TileSize = 190;
+    TileSize = windowWidth * 0.11;
     var FrameMargin = 350;
     columnsNo = Math.floor((windowWidth - RightMargin) / TileSize);
     rowsNo = Math.floor((windowHeight - 2 * FrameMargin) / TileSize);
 
+    // Background // 
     push();
-    Background = new Window(10, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight,
+    Background = new Window(windowWidth * 0.0035, windowWidth / 2, windowHeight / 2, windowWidth, windowHeight,
         221, false, true, 240, 150, true);
     Background.display();
     pop();
 
 
-
+    // Progression //     
     push();
-    RightBar = new Window(5, 1550, windowHeight / 2, 350, 800,
-        221, false, false, 240, 150, true);
-    RightBar.display();
-    RightBar.HorLine(1550, 280, 260);
-    RightBar.HorLine(1550, 350, 260);
-    pop();
+    for (var i = 0; i < 5; i++) {
 
-
-
-    push();
-    for (let i = 0; i < Users; i++) {
-        Characters = new Window(5, FrameMargin / 2 + 10, 100 + 100 * i, 250, 90,
-            221, false, false, 250, 120, true, true);
-        Characters.display();
+        Progression = new Window(windowWidth * 0.0017, (windowWidth * 0.28) + (i * (windowWidth * 0.10995)), windowWidth * 0.04, windowWidth * 0.0925, windowHeight * 0.0175,
+            NoteColors[1], true, false, 240, 150, true, false, 255, false);
+        Progression.display();
+        Progression.displayText("Chord", "", windowWidth * 0.006, (- windowWidth * 0.0465) + (i * (windowWidth * 0.00025)), - windowHeight * 0.02, 0, 255)
+        Progression.displayText(i + 1, "", windowWidth * 0.006, (- windowWidth * 0.02) + (i * (windowWidth * 0.00025)), - windowHeight * 0.02, 0, 255)
     }
     pop();
 
+
+    // Slider Box //     
+    push();
+    RightBar = new Window(windowWidth * 0.00225, windowWidth * 0.895, windowHeight / 2, windowWidth * 0.15, windowHeight * 0.88,
+        221, false, false, 240, 100, true, false, 255, false);
+    RightBar.display();
+    RightBar.HorLine(windowWidth * 0.8975, windowHeight * 0.275, windowWidth * 0.12);
+    RightBar.HorLine(windowWidth * 0.8975, windowHeight * 0.35, windowWidth * 0.12);
+    pop();
+
+
+    // Lower Pitch Tile // 
     push();
     for (var i = 0; i < NoteColors.length; i++) {
-        ColorLegend = new Window(3, 470 + 105 * i, 800, 80, 80,
-            NoteColors[i], false, false, 200, 150, true, false, true, true, 4);
-        ColorLegend.display();
-        ColorLegend.displayText(i, "", 11, -30, 30);
+        var npTileGap = windowWidth * 0.042
+        var npTileSize = windowWidth * 0.035
+
+
+        LowerPitchTile[i] = new Window(windowWidth * 0.002, ((windowWidth / 2) + (i * npTileGap) + npTileGap / 2) - (noteNum / 2 * npTileGap), windowHeight * 0.885, npTileSize, npTileSize,
+            NoteColors[i], true, false, 200, 100, LowerPTileState[i], false, true, LowerPTileState[i], 4);
+        LowerPitchTile[i].display();
+        LowerPitchTile[i].displayText(i + 1, "", windowWidth * 0.005, - windowWidth * 0.015, windowHeight * 0.03, 0, 255);
+
     }
-    pop();
 
     push();
-    MicTile = new Window(5, 1550, 170, 150, 150,
-        (NoteColors[3]), true, false, 240, 150, true);
+
+
+    pop();
+    // console.log("W. " + windowWidth)
+    // console.log("H, " + windowHeight)
+
+    // Mic Tile // 
+    push();
+    MicTile = new Window(windowWidth * 0.00175, windowWidth * 0.8975, windowHeight * 0.175, windowHeight * 0.125, windowHeight * 0.125,
+        (NoteColors[10]), true, false, 240, 150, true);
     MicTile.display();
+    MicTile.displayText(10, "", windowWidth * 0.0085, - windowWidth * 0.0225, windowHeight * 0.05, 0, 255)
     pop();
 
+    // Slider Vert // 
     push();
-    Slider = new Window(5, 1490, 600, 17, 450,
+    Slider = new Window(windowWidth * 0.00175, windowWidth * 0.875, windowHeight * 0.6425, windowWidth * 0.0075, windowHeight * 0.515,
         (0), true, false, 240, 150, true);
     Slider.display();
     pop();
+
+    // Slider Pitch - Box // 
     push();
-    PaletteDock = new Window(5, 1600, 600, 80, 450,
+    PaletteDock = new Window(windowWidth * 0.00175, windowWidth * 0.915, windowHeight * 0.6425, windowWidth * 0.0275, windowHeight * 0.52,
         (221), false, false, 240, 150, true);
     PaletteDock.display();
     pop();
+
+    // Slider - Pitch // 
     push();
     for (var i = 0; i < NoteColors.length; i++) {
-        Palette = new Window(5, 1600, 422 + 50 * i, 40, 40,
+        Palette = new Window(windowWidth * 0.00175, windowWidth * 0.915, windowHeight * 0.87 + ((windowHeight * -0.0415) * i), windowHeight * 0.0325, windowHeight * 0.0325,
             NoteColors[i], true, false, 0, 60, true, false, true, true, null, true);
         Palette.display();
+        //442
     }
     pop();
-    push();
-    var markerHeight;
-    if (noteglobal.frequency > 130 && noteglobal.frequency < 265) {
-        markerHeight = map(noteglobal.frequency, 130, 265, 780, 390);
+
+    var volume = mic.getLevel();
+    if (volume > 0.07) {
+
+
+
+        // Slider Pointer // 
+        push();
+        if (noteglobal.name == "C") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.8575)
+        }
+        if (noteglobal.name == "C♯") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.815)
+        }
+        if (noteglobal.name == "D") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.7725)
+        }
+        if (noteglobal.name == "D♯") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.73)
+        }
+        if (noteglobal.name == "E") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.6875)
+        }
+        if (noteglobal.name == "F") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.6475)
+        }
+        if (noteglobal.name == "F♯") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.605)
+        }
+        if (noteglobal.name == "G") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.565)
+        }
+        if (noteglobal.name == "G♯") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.5225)
+        }
+        if (noteglobal.name == "A") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.48)
+        }
+        if (noteglobal.name == "A♯") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.4385)
+        }
+        if (noteglobal.name == "B") {
+
+            translate(windowWidth * 0.8625, windowHeight * 0.3975)
+        }
+
+
     }
-    else { markerHeight = 780 };
-    translate(1460, markerHeight);  //390  780
+    else {
+        translate(windowWidth * 0.8625, windowHeight * 0.8575)
+        noteglobal = {};
 
 
-    scale(0.2);
+    }
+    // translate(windowWidth * 0.8625, map(noteglobal.frequency, 129, 245, 1063, 500))
+    // console.log("FZ, " + noteglobal.frequency)
+    // map(noteglobal.frequency, 129, 262, 1063, 500)
 
+    scale(windowWidth * 0.0001);
     image(marker, 0, 0);
-
     pop();
 
-
-    console.log(noteglobal);
-    for (var x = 0; x < 5; x++) {
-        for (var y = 0; y < 3; y++) {
+     console.log(sing(noteglobal));
+    
+    // Chord Tile // 
+    var chordNum = 5
+    var playerNum = 3
+    for (var x = 0; x < chordNum; x++) {
+        for (var y = 0; y < Users; y++) {
 
             noStroke();
 
@@ -220,25 +345,28 @@ function draw() {
 
             // square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
 
-            Tile = new Window(5, FrameMargin + x * TileSize + TileSize / 2, 140 + y * TileSize + TileSize / 2, TileSize * margin, TileSize * margin, 250, false, true, 230, 180, false);
+            Tile = new Window(windowWidth * 0.00175, ((windowWidth / 2) + (x * TileSize) + TileSize / 2) - (TileSize * chordNum / 2), ((windowHeight / 2.25) + (y * TileSize) + TileSize / 2) - (TileSize * Users / 2), TileSize * margin, TileSize * margin,
+                250, false, true, 230, 180, false);
+            // Tile = new Window(5, FrameMargin + x * TileSize + TileSize / 2, 140 + y * TileSize + TileSize / 2, TileSize * margin, TileSize * margin, 250, false, true, 230, 180, false);
             Tile.display();
-            Tile.displayText("Miltos", RandomNumbers[y * x], 11, 25, 70);
+            Tile.displayText("Toothy Jellycat", "", windowWidth * 0.006, windowWidth * 0.0425, windowHeight * 0.0825, 2, 255);
+            Tile.displayText(RandomNumbers[y * x], "", windowWidth * 0.006, - windowWidth * 0.0415, windowHeight * 0.0825, 0, 255);
+
 
         }
     }
 
-
-
+    // User Block // 
     push();
     for (let i = 0; i < Users; i++) {
 
-
-        Characters = new Window(5, FrameMargin / 2 + 10, 100 + 100 * i, 250, 90,
-            221, false, false, 250, 120, true, true, true);
+        Characters = new Window(windowWidth * 0.002, windowWidth * 0.1, windowHeight * 0.13 + (windowHeight * 0.15) * i, windowWidth * 0.15, windowHeight * 0.125,
+            221, false, false, 250, 80, true, true, false, false);
         Characters.display();
         push();
-        translate(FrameMargin / 2 - 100, 70 + 100 * i);
-        scale(0.1);
+        // translate(FrameMargin / 2 - 100, 70 + 100 * i);
+        translate(windowWidth * 0.04, windowHeight * 0.1 + (windowHeight * 0.15) * i);
+        scale(windowWidth * 0.00005);
         image(img[i], 0, 0);
         pop();
 
@@ -247,66 +375,41 @@ function draw() {
 
 
 
-
-
     if (LocalData != null) {
-
-
 
         var Microphones = [];
         var Positions = [{ x: 1, y: 2 }];
         var Colors = [];
         if (LocalData[i]) {
             for (var i = 0; i < LocalData.length; i++) {
+
                 Microphones.push(Object.values(LocalData[i])[0].Volume);
                 Positions.push(Object.values(LocalData[i])[0].position);
                 if (Object.keys(LocalData[i])[0] === socket.id) {
                     bgcolor = (Object.values(LocalData[i])[0].color.hex);
 
                 }
+
                 Colors.push((Object.values(LocalData[i])[0].color.hex));
-
-
 
             }
         }
 
-
         if (GridInit && socket.id) {
-
 
             sendGrid(columnsNo, rowsNo);
             GridInit = false;
+
         }
 
-
-
-
-        // for (var x = 0; x < columnsNo; x++) {
-        //     for (var y = 0; y < rowsNo; y++) {
-        //         for (var i = 0; i < LocalData.length; i++) {
-        //             noStroke();
-        //             fill(210, 210, 210);
-
-        //             //  square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
-        //             push();
-        //             fill(color(Colors[i]).levels[0], color(Colors[i]).levels[1], color(Colors[i]).levels[2], Aux(Microphones[i]));
-        //             square(FrameMargin + Positions[i].x * TileSize, FrameMargin + Positions[i].y * TileSize, TileSize * margin);
-        //             pop();
-        //         }
-        //     }
-        // }
     }
 
     push();
     noStroke();
     fill(246, 246, 246);
-
-
     pop();
 
     push();
-
     noStroke();
     fill(bgcolor);
     var PersonalTileSize = 180;
@@ -318,20 +421,20 @@ function draw() {
 
 
 
-    var volume = mic.getLevel();
 
-    if (volume > 0.01) {
+    if (volume > 0.1) {
+
         sendmouse(volume);
 
     }
 
 
-
-
     var heightAux1 = map(volume * sensibility, 0, 1, 50, 400);
     function Aux(volume) {
+
         var heightAux = map(volume * sensibility, 0.1, 1, 0, 300);
         return heightAux;
+
     }
 
     noFill();
@@ -340,12 +443,13 @@ function draw() {
     ellipseMode(CENTER);
     // ellipse(windowWidth - RightMargin + (RightMargin - PersonalTileSize) / 2 + PersonalTileSize / 2, PersonalTileSize / 2 + FrameMargin, 100 + heightAux1 / 8, 100 + heightAux1 / 8);
 
-    xPos = 1670 - RightMargin + (RightMargin - PersonalTileSize) / 2 + PersonalTileSize / 2;
-    yPos = 170;
-    size = 100 + heightAux1 / 4;
-    StrokeW = 2;
+    // 1670 - RightMargin + (RightMargin - PersonalTileSize) / 2 + PersonalTileSize / 2;
+    xPos = windowWidth * 0.8965
+    yPos = windowHeight * 0.1725;
+    size = windowWidth * 0.035 + heightAux1 / 4;
+    StrokeW = 3;
 
-    PixCircle(1550, yPos, size / 2, StrokeW, 1, 5);   //(xPos,yPos,diameter,strokeWeight,strokeGaps,pixelSize)
+    PixCircle(xPos, yPos, size / 2, StrokeW, 1, 4);   //(xPos,yPos,diameter,strokeWeight,strokeGaps,pixelSize)
     // user.display();
     // userInput.display();
     // userInput.displayText("miltos");
@@ -354,9 +458,6 @@ function draw() {
 }
 
 //Pixelates a Circle
-
-
-
 function PixCircle(xPos, yPos, CircleSize, thickness, gaps, pixelRatio) {
     push();
     noStroke();
@@ -379,11 +480,10 @@ function PixCircle(xPos, yPos, CircleSize, thickness, gaps, pixelRatio) {
 
 function mouseMoved() {
     userStartAudio();
-
 }
 
 
-// // Function for sending to the socket
+// // // Function for sending to the socket
 function sendmouse(volume) {
     // We are sending!
     // ////console.log("Send MicVolume: " + volume);
@@ -404,3 +504,9 @@ function sendGrid(columnsNo, rowsNo) {
     ////console.log(socket.id, columnsNo, rowsNo);
     socket.emit('grid', data);
 }
+
+// Scene I - IV Texts 
+//// The coronavirus pandemic is an unprecedented event in modern history. Millions of people are known to have been infected worldwide, and countless numbers of families have lost their loved ones. Tens of millions face losing jobs in this crisis. Our world faces the worst recession since the Great Depression of the 1930s.    
+//// Governments around the world have enforced different lockdown measures. Airports, bars, gyms, offices, public transportation, restaurants, schools, stores, etc., are closed worldwide. Social distancing measures have been damaging people's usual social life.  
+//// Quarantine has given human communication a drastic turn. Conventional face-to-face communication has been interrupted. Individuals are working from home, taking classes online, and socializing virtually. All communications have been consolidated into a virtual space behind our screens. Despite the disruptions, humans are continuously creating new forms of communications.      
+//// Individual's activity spaces have been moslty limited to the physical space one lives in. 
