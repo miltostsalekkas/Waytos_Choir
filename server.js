@@ -60,27 +60,23 @@ io.on('connection',
     socket.on('mic',
       function (data) {
 
-
+      
         if (data != null) {
 
           for (var i = 0; i < IDs.length; i++) {
             if (data[IDs[i]] != null) {
-              data[IDs[i]].color = color;
-              data[IDs[i]].position = Positions[i];
+              // data[IDs[i]].color = color;
+              // data[IDs[i]].position = Positions[i];
               PublicData[i] = { [IDs[i]]: data[IDs[i]] };
             }
           }
-
+          console.log(PublicData);
 
           socket.emit('Public', PublicData);
         }
       }
     );
 
-    socket.on('offer', function (data) {
-
-      console.log("Data is : ", data);
-    });
 
 
     socket.on('disconnect', function () {
@@ -93,17 +89,7 @@ io.on('connection',
       socket.emit('Users', { Users: Users });
     });
 
-    socket.on('signal', (toId, message) => {
-      io.to(toId).emit('signal', socket.id, message);
-    });
 
-    socket.on("message", function (data) {
-      io.sockets.emit("broadcast-message", socket.id, data);
-    })
-
-    socket.on('disconnect', function () {
-      io.sockets.emit("user-left", socket.id);
-    })
 
   }
 );

@@ -26,7 +26,7 @@ var PaletteDock;
 var Palette;
 
 var CharNo;
-var Users;
+var Users = 0;
 
 var chordNum = 5;
 
@@ -43,6 +43,8 @@ const model_url = 'https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/
 let noteSpan;
 var noteNum = 12;
 var LowerPTileState = [false, false, false, false];
+
+var UserVoice;
 
 notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
@@ -83,6 +85,7 @@ function setup() {
         // When we receive data
         function (data) {
             LocalData = data;
+           
 
         }
     );
@@ -97,6 +100,10 @@ function setup() {
         // When we receive data
         function (data) {
             Users = data.Users;
+            console.log(Users);
+            for (var i=0; i<Users; i++){
+                // UserVoice[i] = new Tone.Synth().toMaster();
+            }
         }
     );
 
@@ -113,6 +120,7 @@ function setup() {
 
 
     synth = new Tone.Synth().toMaster();
+    keys =  new Tone.Synth().toMaster();
 
 
 }
@@ -127,7 +135,7 @@ function mousePressed(event) {
             event.clientY > LowerPitchTile[i].reportPos().minBorder.y &&
             event.clientY < LowerPitchTile[i].reportPos().maxBorder.y
         ) {
-            synth.triggerAttackRelease(notes[i] + "4", 0.01);
+            keys.triggerAttackRelease(notes[i] + "4", 0.01);
             LowerPTileState[i] = true;
         }
     }
@@ -158,6 +166,8 @@ function ReadImages() {
 }
 
 function draw() {
+    // (Object.values(LocalData[i])[0].Volume
+    console.log(LocalData);
 
 
     if (!ImagesRead) {
@@ -481,7 +491,7 @@ function sendmouse(volume) {
 
 
     var data = {
-        [socket.id]: { Volume: volume, Grid: { x: columnsNo, y: rowsNo } }
+        [socket.id]: { Volume: volume, Note:Note,Octave:Octave,Time:Time }
     };
 
 

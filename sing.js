@@ -12,12 +12,17 @@ var timestarted = true;
 var start = 0;
 var end = 0;
 
+var Note;
+var Octave;
+var Time;
+
 function sing(notes) {
     if (notes) {
         var singing;
         var frequency = notes.frequency;
         var note = notes.name;
         var octave = notes.octave;
+
 
 
 
@@ -42,18 +47,17 @@ function sing(notes) {
 
                     time = new Date().getTime() - start;
                     time = time - end + 3;
-                    TimeStamps.push(time);
+
                     if (note && time) {
-                        // synth.triggerAttackRelease(note + "4", 2);
 
-
-                        synth.triggerAttackRelease(note + octave, time / 1000);
-                        console.log(note + octave, time / 1000);
+                        synth.triggerAttackRelease(note + octave, time / 100);
+                        Note = note;
+                        Octave = octave;
+                        Time = time;
                     }
                 }
                 else {
                     end = new Date().getTime() - start;
-
                 }
 
                 lastnote = note;
@@ -62,9 +66,11 @@ function sing(notes) {
         }
     }
 
-
-
-    // return { singing: singing, notes: selectedNote, frequency: frequency, time: TimeStamps }
 }
 
-// synth.triggerAttackRelease(note + "4", 1);
+function UserSing(Users, note, octave, time) {
+
+    for (var i = 0; i < Users; i++) {
+        UserVoice[i].triggerAttackRelease(note + octave, time / 100);
+    }
+}
