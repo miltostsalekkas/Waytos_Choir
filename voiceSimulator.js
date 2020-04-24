@@ -19,10 +19,3 @@ pinkTromboneElement.addEventListener("load", event => {
     });
 });
 
-function setVoiceness(voiceness) {
-  const tenseness = 1 - Math.cos((voiceness) * Math.PI * 0.5);
-  const loudness = Math.pow(tenseness, 0.25);
-
-  pinkTromboneElement.tenseness.value = tenseness;
-  pinkTromboneElement.loudness.value = loudness;
-}

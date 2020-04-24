@@ -42,7 +42,9 @@ const model_url = 'https://cdn.jsdelivr.net/gh/ml5js/ml5-data-and-models/models/
 
 let noteSpan;
 var noteNum = 12;
-var LowerPTileState = [false, false, false, false]
+var LowerPTileState = [false, false, false, false];
+
+notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 
 
@@ -110,7 +112,7 @@ function setup() {
     noteSpan = select('#note');
 
 
-    // synth = new Tone.Synth().toMaster();
+    synth = new Tone.Synth().toMaster();
 
 
 }
@@ -125,6 +127,7 @@ function mousePressed(event) {
             event.clientY > LowerPitchTile[i].reportPos().minBorder.y &&
             event.clientY < LowerPitchTile[i].reportPos().maxBorder.y
         ) {
+            synth.triggerAttackRelease(notes[i] + "4", 0.01);
             LowerPTileState[i] = true;
         }
     }
@@ -133,7 +136,7 @@ function mousePressed(event) {
 function mouseReleased() {
 
     LowerPTileState = [false, false, false, false];
-    pinkTromboneElement.start();
+
 }
 ////////////////////
 ////////////////////
@@ -155,13 +158,6 @@ function ReadImages() {
 }
 
 function draw() {
-    // console.log(noteglobal);
-    // if (volume > 0.1) {
-
-    // }
-
-
-    //create a synth and connect it to the master output (your speakers)
 
 
     if (!ImagesRead) {
@@ -224,8 +220,7 @@ function draw() {
 
 
     pop();
-    // console.log("W. " + windowWidth)
-    // console.log("H, " + windowHeight)
+
 
     // Mic Tile // 
     push();
@@ -260,7 +255,7 @@ function draw() {
     pop();
 
     var volume = mic.getLevel();
-    if (volume > 0.07) {
+    if (volume > 0.1) {
 
 
 
@@ -323,16 +318,17 @@ function draw() {
 
 
     }
-    // translate(windowWidth * 0.8625, map(noteglobal.frequency, 129, 245, 1063, 500))
-    // console.log("FZ, " + noteglobal.frequency)
-    // map(noteglobal.frequency, 129, 262, 1063, 500)
 
     scale(windowWidth * 0.0001);
     image(marker, 0, 0);
     pop();
 
-     console.log(sing(noteglobal));
-    
+
+
+     sing(noteglobal);
+
+    // sing(noteglobal);
+
     // Chord Tile // 
     var chordNum = 5
     var playerNum = 3
@@ -343,7 +339,6 @@ function draw() {
 
             fill(210, 210, 210);
 
-            // square(FrameMargin + x * TileSize, FrameMargin + y * TileSize, TileSize * margin);
 
             Tile = new Window(windowWidth * 0.00175, ((windowWidth / 2) + (x * TileSize) + TileSize / 2) - (TileSize * chordNum / 2), ((windowHeight / 2.25) + (y * TileSize) + TileSize / 2) - (TileSize * Users / 2), TileSize * margin, TileSize * margin,
                 250, false, true, 230, 180, false);
@@ -364,7 +359,6 @@ function draw() {
             221, false, false, 250, 80, true, true, false, false);
         Characters.display();
         push();
-        // translate(FrameMargin / 2 - 100, 70 + 100 * i);
         translate(windowWidth * 0.04, windowHeight * 0.1 + (windowHeight * 0.15) * i);
         scale(windowWidth * 0.00005);
         image(img[i], 0, 0);
@@ -450,9 +444,7 @@ function draw() {
     StrokeW = 3;
 
     PixCircle(xPos, yPos, size / 2, StrokeW, 1, 4);   //(xPos,yPos,diameter,strokeWeight,strokeGaps,pixelSize)
-    // user.display();
-    // userInput.display();
-    // userInput.displayText("miltos");
+
 
 
 }
@@ -483,10 +475,10 @@ function mouseMoved() {
 }
 
 
-// // // Function for sending to the socket
+
 function sendmouse(volume) {
     // We are sending!
-    // ////console.log("Send MicVolume: " + volume);
+
 
     var data = {
         [socket.id]: { Volume: volume, Grid: { x: columnsNo, y: rowsNo } }
@@ -501,12 +493,7 @@ function sendGrid(columnsNo, rowsNo) {
     var data = {
         [socket.id]: { x: columnsNo, y: rowsNo }
     };
-    ////console.log(socket.id, columnsNo, rowsNo);
+
     socket.emit('grid', data);
 }
 
-// Scene I - IV Texts 
-//// The coronavirus pandemic is an unprecedented event in modern history. Millions of people are known to have been infected worldwide, and countless numbers of families have lost their loved ones. Tens of millions face losing jobs in this crisis. Our world faces the worst recession since the Great Depression of the 1930s.    
-//// Governments around the world have enforced different lockdown measures. Airports, bars, gyms, offices, public transportation, restaurants, schools, stores, etc., are closed worldwide. Social distancing measures have been damaging people's usual social life.  
-//// Quarantine has given human communication a drastic turn. Conventional face-to-face communication has been interrupted. Individuals are working from home, taking classes online, and socializing virtually. All communications have been consolidated into a virtual space behind our screens. Despite the disruptions, humans are continuously creating new forms of communications.      
-//// Individual's activity spaces have been moslty limited to the physical space one lives in. 
