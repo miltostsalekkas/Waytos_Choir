@@ -68,14 +68,15 @@ function sing(notes) {
 
 }
 
-function UserSing(Users, note, octave, time) {
+function UserSing(Users, note, octave, time, i) {
 
-    for (var i = 0; i < Users; i++) {
-        if (note !== Lastnote[i] && note !== null) {
-            UserVoice[i].triggerAttackRelease(note + octave, time / 500);
-            console.log(UserVoice[i], note, octave, time);
-            Lastnote[i] = note;
-        }
+
+    if (note !== Lastnote[i] && note !== nul) {
+        console.log(UserVoice[i]);
+        UserVoice[i].triggerAttackRelease(note + octave, time / 500);
+       
+        Lastnote[i] = note;
+
 
     }
 

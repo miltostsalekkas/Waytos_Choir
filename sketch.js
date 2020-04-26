@@ -102,7 +102,7 @@ function setup() {
 
                             if (Users && LNote && LOctave && Ltime) {
                                
-                                UserSing(Users, LNote, LOctave, Ltime);
+                                UserSing(Users, LNote, LOctave, Ltime,i);
                             }
 
                         }
@@ -129,6 +129,7 @@ function setup() {
             IDS = data.IDs;
             for (var i = 0; i < Users; i++) {
                 UserVoice[i] = new Tone.Synth().toMaster();
+                console.log(UserVoice[i]);
             }
         }
     );
