@@ -50,7 +50,7 @@ function sing(notes) {
 
                     if (note && time) {
 
-                        synth.triggerAttackRelease(note + octave, time / 100);
+                        synth.triggerAttackRelease(note + octave, time / 500);
                         Note = note;
                         Octave = octave;
                         Time = time;

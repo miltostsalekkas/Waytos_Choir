@@ -32,11 +32,12 @@ io.on('connection',
 
 
 
+
     console.log("We have a new client: " + socket.id);
     Users = Users + 1;
     console.log("Number od Users : " + Users);
     socket.emit('CharNo', CharactersNo);
-    socket.broadcast.emit('Users', { Users: Users });
+    socket.broadcast.emit('Users', { Users: Users, IDs: IDs });
     socket.emit('Users', { Users: Users });
 
     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -60,18 +61,19 @@ io.on('connection',
     socket.on('mic',
       function (data) {
 
-      
+        console.log('public data',PublicData);
+
         if (data != null) {
 
           for (var i = 0; i < IDs.length; i++) {
             if (data[IDs[i]] != null) {
               // data[IDs[i]].color = color;
               // data[IDs[i]].position = Positions[i];
-              PublicData[i] = { [IDs[i]]: data[IDs[i]] };
+              PublicData [i]= {[IDs[i]]:data[IDs[i]]};
             }
           }
-          console.log(PublicData);
 
+          socket.broadcast.emit('Public', PublicData);
           socket.emit('Public', PublicData);
         }
       }
@@ -81,12 +83,28 @@ io.on('connection',
 
     socket.on('disconnect', function () {
 
+      console.log("This user left " + socket.id);
+      var SocketLeftIndex = IDs.indexOf(socket.id);
+
       IDs = IDs.filter(item => item !== socket.id);
+
+
+     PublicData = PublicData.filter(item => {
+       console.log('item', item)
+       Object.keys(item) !== SocketLeftIndex
+    });
+
+      console.log('public data', PublicData)
       console.log("Client has disconnected");
       Users = Users - 1;
       console.log("Number of Users : " + Users);
-      socket.broadcast.emit('Users', { Users: Users });
+      socket.broadcast.emit('Users', { Users: Users, IDs: IDs });
       socket.emit('Users', { Users: Users });
+      socket.broadcast.emit('Public', PublicData);
+      socket.emit('Public', PublicData);
+
+
+
     });
 
 

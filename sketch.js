@@ -44,8 +44,10 @@ let noteSpan;
 var noteNum = 12;
 var LowerPTileState = [false, false, false, false];
 
-var UserVoice;
+var UserVoice = [];
 
+var state = false;
+var IDS;
 notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 
@@ -85,7 +87,31 @@ function setup() {
         // When we receive data
         function (data) {
             LocalData = data;
-           
+
+
+            if (LocalData) {
+                for (let i = 0; i < Users; i++) {
+                    if (LocalData[i]) {
+
+                        if (socket.id !== Object.keys(LocalData[i])[0]) {
+                            console.log(Object.keys(LocalData[i])[0]);
+
+
+                            var LNote = LocalData[i].Note;
+                            var LOctave = LocalData[i].Octave;
+                            var Ltime = LocalData[i].Time;
+
+                            if (Users && LNote && LOctave && Ltime) {
+                                UserSing(Users, LNote, LOctave, Ltime);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+
 
         }
     );
@@ -100,9 +126,9 @@ function setup() {
         // When we receive data
         function (data) {
             Users = data.Users;
-            console.log(Users);
-            for (var i=0; i<Users; i++){
-                // UserVoice[i] = new Tone.Synth().toMaster();
+            IDS = data.IDs;
+            for (var i = 0; i < Users; i++) {
+                UserVoice[i] = new Tone.Synth().toMaster();
             }
         }
     );
@@ -120,7 +146,7 @@ function setup() {
 
 
     synth = new Tone.Synth().toMaster();
-    keys =  new Tone.Synth().toMaster();
+    keys = new Tone.Synth().toMaster();
 
 
 }
@@ -138,16 +164,27 @@ function mousePressed(event) {
             keys.triggerAttackRelease(notes[i] + "4", 0.01);
             LowerPTileState[i] = true;
         }
+
     }
 }
 
-function mouseReleased() {
+
+
+function mouseReleased(event) {
 
     LowerPTileState = [false, false, false, false];
 
 }
-////////////////////
-////////////////////
+
+function keyPressed() {
+
+    if (key === "m" || key === "M") {
+        state = !state;
+        Tone.Master.mute = state;
+    }
+    //I have to add Mute button here
+}
+
 
 function keyTyped(bla) {
     return bla;
@@ -166,8 +203,8 @@ function ReadImages() {
 }
 
 function draw() {
-    // (Object.values(LocalData[i])[0].Volume
-    console.log(LocalData);
+
+
 
 
     if (!ImagesRead) {
@@ -335,7 +372,7 @@ function draw() {
 
 
 
-     sing(noteglobal);
+    sing(noteglobal);
 
     // sing(noteglobal);
 
@@ -379,34 +416,34 @@ function draw() {
 
 
 
-    if (LocalData != null) {
+    // if (LocalData != null) {
 
-        var Microphones = [];
-        var Positions = [{ x: 1, y: 2 }];
-        var Colors = [];
-        if (LocalData[i]) {
-            for (var i = 0; i < LocalData.length; i++) {
+    //     var Microphones = [];
+    //     var Positions = [{ x: 1, y: 2 }];
+    //     var Colors = [];
+    //     if (LocalData[i]) {
+    //         for (var i = 0; i < LocalData.length; i++) {
 
-                Microphones.push(Object.values(LocalData[i])[0].Volume);
-                Positions.push(Object.values(LocalData[i])[0].position);
-                if (Object.keys(LocalData[i])[0] === socket.id) {
-                    bgcolor = (Object.values(LocalData[i])[0].color.hex);
+    //             Microphones.push(Object.values(LocalData[i])[0].Volume);
+    //             Positions.push(Object.values(LocalData[i])[0].position);
+    //             if (Object.keys(LocalData[i])[0] === socket.id) {
+    //                 bgcolor = (Object.values(LocalData[i])[0].color.hex);
 
-                }
+    //             }
 
-                Colors.push((Object.values(LocalData[i])[0].color.hex));
+    //             Colors.push((Object.values(LocalData[i])[0].color.hex));
 
-            }
-        }
+    //         }
+    //     }
 
-        if (GridInit && socket.id) {
+    //     if (GridInit && socket.id) {
 
-            sendGrid(columnsNo, rowsNo);
-            GridInit = false;
+    //         sendGrid(columnsNo, rowsNo);
+    //         GridInit = false;
 
-        }
+    //     }
 
-    }
+    // }
 
     push();
     noStroke();
@@ -491,7 +528,7 @@ function sendmouse(volume) {
 
 
     var data = {
-        [socket.id]: { Volume: volume, Note:Note,Octave:Octave,Time:Time }
+        [socket.id]: { Volume: volume, Note: Note, Octave: Octave, Time: Time }
     };
 
 
@@ -501,9 +538,9 @@ function sendGrid(columnsNo, rowsNo) {
 
 
     var data = {
-        [socket.id]: { x: columnsNo, y: rowsNo }
+        IDs: { x: columnsNo, y: rowsNo }
     };
 
-    socket.emit('grid', data);
+    socket.emit('ID', data);
 }
 
