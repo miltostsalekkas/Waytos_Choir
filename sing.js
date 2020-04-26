@@ -11,7 +11,7 @@ var lastnote = "";
 var timestarted = true;
 var start = 0;
 var end = 0;
-
+var Lastnote = [];
 var Note;
 var Octave;
 var Time;
@@ -71,6 +71,12 @@ function sing(notes) {
 function UserSing(Users, note, octave, time) {
 
     for (var i = 0; i < Users; i++) {
-        UserVoice[i].triggerAttackRelease(note + octave, time / 100);
+        if (note !== Lastnote[i] && note !== null) {
+            UserVoice[i].triggerAttackRelease(note + octave, time / 500);
+            console.log(UserVoice[i], note, octave, time);
+            Lastnote[i] = note;
+        }
+
     }
+
 }

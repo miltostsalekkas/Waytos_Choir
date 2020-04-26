@@ -94,14 +94,14 @@ function setup() {
                     if (LocalData[i]) {
 
                         if (socket.id !== Object.keys(LocalData[i])[0]) {
-                            console.log(Object.keys(LocalData[i])[0]);
+                          
+                            var LNote = Object.values(LocalData[i])[0].Note;
+                            var LOctave = Object.values(LocalData[i])[0].Octave;
+                            var Ltime = Object.values(LocalData[i])[0].Time;
 
-
-                            var LNote = LocalData[i].Note;
-                            var LOctave = LocalData[i].Octave;
-                            var Ltime = LocalData[i].Time;
 
                             if (Users && LNote && LOctave && Ltime) {
+                               
                                 UserSing(Users, LNote, LOctave, Ltime);
                             }
 
